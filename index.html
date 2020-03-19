@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Le son Caméléon</title>
+	<!-- LIBs -->
+	<script src="lib/ml5.min.js"></script>
+	<script src="lib/tone/Tone.js"></script>
+
+	<!-- Load latest acron version first -->
+	<script type="text/javascript" src="https://unpkg.com/acorn"></script>
+	<script src="lib/paper/paper-full.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/main.css" />
+</head>
+
+<body>
+	<script src="app-dist.js" type="text/paperscript" canvas="myCanvas" hidpi="off" keepalive="false"></script>
+
+	<canvas id="myCanvas" resize></canvas>
+	<video autoplay id="videoElement" width="640" height="480"></video>
+
+	<div class="ui">
+		<div class="loader scene-element active" id="Loader">
+			<p>🔔 Activez votre WebCam quand cela vous sera demandé, et montez le son !</p>
+			<span class="loader-title">Loading async</span>
+			<div class="one_half">
+				<span class="loading-section">
+					<p>PoseNet loading...</p>
+				</span>
+			</div>
+			<div class="one_half last">
+				<p id="ToneBuffer"></p>
+			</div>
+		</div>
+		<div class="home scene-element" id="Home">
+			<h1>"Le son Caméléon"</h1>
+			<p>
+				Est mon deuxième projet de l'année 2020 faisant partie d'une série consacrée au Creative
+				Coding.<br>J'ai développé cette expérience interactive à l'aide des librairies : <a
+					href="http://paperjs.org/" target="_blank">paperJS</a>
+				(rendu
+				graphique) et <a href="https://ml5js.org/" target="_blank">ml5.js
+				</a> (Machine Learning).
+				<div id="startBtn" class="bt bt-start">START</div>
+				<p>
+					Ce prototype est un clin d'oeil à un projet qui à été déclencheur dans ma décision de me réorienter
+					vers
+					l'art numérique et l'onorisme : <a
+						href="https://devart.withgoogle.com/#/project/16574285?q=mr%20kalia" target="_blank">'Les
+						métamorphoses
+						de Mr. Kalia'</a> développé par Cyril Diagne et Béatrice Lartigue en 2014 (Lauréat du
+					concours
+					Google
+					DevArt).
+				</p>
+				<p>En 2020, nous avons la chance de pouvoir utiliser l'apprentissage machine "machine learning" dans un
+					navigateur web et une simple webCam suffit pour une détection de mouvement très précise !<br> J'ai
+					décidé de partager mon processus d'apprentissage sur <a href="https://twitter.com/parazar"
+						target="_blank">twitter</a> et sur <a
+						href="https://www.youtube.com/channel/UCywP3bQJEzYVXdZXLR21z2Q" target="_blank">youtube</a>
+				</p>
+		</div>
+		<div class="in-game scene-element" id="InGame">
+			<div id="backBtn" class="bt bt-back">BACK</div>
+			<div class="keys">
+				<p>Press key 'A' to generate a graphic pattern<br>
+					Press key 'C' to change color</p>
+
+			</div>
+		</div>
+
+		<footer id="Footer">
+			<script>
+				window.twttr = (function (d, s, id) {
+					var js,
+						fjs = d.getElementsByTagName(s)[0],
+						t = window.twttr || {};
+					if (d.getElementById(id)) return t;
+					js = d.createElement(s);
+					js.id = id;
+					js.src = "https://platform.twitter.com/widgets.js";
+					fjs.parentNode.insertBefore(js, fjs);
+					t._e = [];
+					t.ready = function (f) {
+						t._e.push(f);
+					};
+					return t;
+				})(document, "script", "twitter-wjs");
+			</script>
+			<p>
+				Coding & Music & Visuals by Joseph AZAR<br />
+				<a href="https://www.par-azar.com">www.par-azar.com</a>
+			</p>
+			<a class="twitter-follow-button" href="https://twitter.com/parazar" data-size="large"
+				data-show-count="false" SameSite="None">
+				Follow @parazar
+			</a>
+		</footer>
+	</div>
+</body>
+
+</html>

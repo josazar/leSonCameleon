@@ -1,0 +1,130 @@
+/* Fonts */
+@font-face {
+  font-family: "bowlby_one";
+  src: url("/fonts/bowlbyonesc-regular-webfont.woff2") format("woff2"), url("/fonts/bowlbyonesc-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "manjariregular";
+  src: url("/fonts/manjari-regular-webfont.woff2") format("woff2"), url("/fonts/manjari-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+/* Typographie */
+a {
+  color: #d13f7e;
+  text-decoration: none;
+}
+p {
+  font-family: "manjariregular", cursive;
+  font-size: 18px;
+  line-height: 1.4em;
+  padding: 0 25px;
+}
+h1 {
+  margin: 2em auto;
+  text-align: center;
+}
+body,
+html {
+  background: #2e2b36;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  font-family: "manjariregular";
+  color: #cacde0;
+  box-sizing: border-box;
+}
+canvas[resize] {
+  width: 100%;
+  height: 100%;
+}
+video {
+  position: absolute;
+  top: 0px;
+  right: 0;
+  transform: rotateY(180deg);
+  width: 180px;
+  height: 150px;
+}
+footer {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  text-align: right;
+  display: none;
+}
+footer.active {
+  display: block;
+}
+footer p {
+  font-size: 13px;
+}
+.ui {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+}
+.ui .scene-element {
+  display: none;
+}
+.ui .scene-element.active {
+  display: block;
+}
+.ui .loader {
+  max-width: 500px;
+  margin: 40vh auto 0;
+}
+.ui .loader .loader-title {
+  display: block;
+  text-align: center;
+  padding: 20px 0;
+}
+.ui .bt {
+  position: absolute;
+  cursor: pointer;
+  margin: auto;
+  background-color: transparent;
+  border: 3px solid #cacde0;
+  padding: 8px 40px;
+  color: #cacde0;
+  transition: all 0.15s ease-out;
+  text-align: center;
+}
+.ui .bt:hover {
+  background-color: #d13f7e;
+  border-color: #d13f7e;
+  transform: scale(1.12);
+}
+.ui .bt-start {
+  position: relative;
+  margin: 50px auto;
+  width: 100px;
+}
+.ui .bt-back {
+  margin: 10px 20px;
+}
+.ui .in-game .keys {
+  margin: 10px;
+}
+.ui .in-game .keys p {
+  padding-left: 170px;
+  padding-top: 10px;
+  font-size: 12px;
+}
+.ui .home p {
+  max-width: 600px;
+  margin: 1em auto;
+}
+.one_half {
+  width: 49%;
+  padding-right: 2%;
+  float: left;
+}
+.one_half.last {
+  padding-right: 0%;
+}
