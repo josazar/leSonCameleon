@@ -16,6 +16,7 @@ const APP = {
 	scenes: {},
 	ratio: 1,
 	loader: {},
+	truchetPattenIsActive: false,
 	state: "" // "inGame" "home" "loading"
 };
 let w = document.body.clientWidth;

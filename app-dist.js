@@ -18,6 +18,7 @@ const APP = {
   scenes: {},
   ratio: 1,
   loader: {},
+  truchetPattenIsActive: false,
   state: "" // "inGame" "home" "loading"
 
 };
@@ -183,6 +184,7 @@ class ScenesManager {
     APP.layers.blops.opacity = 0;
     APP.layers.audioShapes.opacity = 0;
     APP.AudioCtrl.stop();
+    deleteTruchetPattern();
   }
 
 }
@@ -978,7 +980,7 @@ class AudioCtrl {
         };
         let as = new AudioShape(args);
         let x = getRandomArbitrary(200, 600);
-        as.init([x, -50]);
+        as.init([x, -200]);
         APP.audioShapes.push(as);
       }
     } else {
@@ -1249,6 +1251,10 @@ function onKeyDown(event) {
     bodyScaleOut();
   }
 
+  if (event.key === "z") {
+    deleteTruchetPattern();
+  }
+
   if (event.key === "0") {
     APP.scenes.launchHome();
   }
@@ -1285,7 +1291,8 @@ function bodyScaleOut() {
 }
 
 function truchetOnBody() {
-  // Truchet Layer (Motifs)
+  APP.truchetPattenIsActive = true; // Truchet Layer (Motifs)
+
   let layer = new Layer();
   layer.name = "motifs";
   layer.activate();
@@ -1298,6 +1305,14 @@ function truchetOnBody() {
   }
 
   project.layers["body"].lastChild.clipMask = true;
+}
+
+function deleteTruchetPattern() {
+  if (APP.truchetPattenIsActive) {
+    project.layers["body"].lastChild.clipMask = false;
+    project.layers["body"].lastChild.remove();
+    APP.truchetPattenIsActive = false;
+  }
 }
 /********************************************************************
  *

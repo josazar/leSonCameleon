@@ -175,6 +175,10 @@ function onKeyDown(event) {
 		bodyScaleOut();
 	}
 
+	if (event.key === "z") {
+		deleteTruchetPattern();
+	}
+
 	if (event.key === "0") {
 		APP.scenes.launchHome();
 	}
@@ -212,6 +216,7 @@ function bodyScaleOut() {
 }
 
 function truchetOnBody() {
+	APP.truchetPattenIsActive = true;
 	// Truchet Layer (Motifs)
 	let layer = new Layer();
 	layer.name = "motifs";
@@ -225,6 +230,14 @@ function truchetOnBody() {
 		project.layers["body"].addChild(layer);
 	}
 	project.layers["body"].lastChild.clipMask = true;
+}
+
+function deleteTruchetPattern() {
+	if (APP.truchetPattenIsActive) {
+		project.layers["body"].lastChild.clipMask = false;
+		project.layers["body"].lastChild.remove();
+		APP.truchetPattenIsActive = false;
+	}
 }
 
 /********************************************************************

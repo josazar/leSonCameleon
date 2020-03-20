@@ -51,5 +51,6 @@ class ScenesManager {
 		APP.layers.blops.opacity = 0;
 		APP.layers.audioShapes.opacity = 0;
 		APP.AudioCtrl.stop();
+		deleteTruchetPattern();
 	}
 }
