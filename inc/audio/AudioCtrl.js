@@ -1,7 +1,7 @@
 class AudioCtrl {
 	constructor() {
 		this.FFT_Size = 16;
-		this.nbFFTLines = 10;
+		this.nbFFTLines = 5;
 		this.FFTLines = [];
 		// Audio
 		this.drum = new Tone.Player("/audio/drum_bass.wav").toMaster();
@@ -28,7 +28,7 @@ class AudioCtrl {
 		for (let i = 0; i < this.nbFFTLines; i++) {
 			let FFTL = new FFTLine(this.FFT_Size, 20 * i);
 			let path = FFTL.createPath();
-			path.opacity = 1 - i * 0.1;
+			path.opacity = 1 - i * 0.2;
 			this.FFTLines.push(FFTL);
 		}
 

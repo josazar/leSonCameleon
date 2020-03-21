@@ -17,7 +17,7 @@ class AudioShape {
 		});
 		this.color = args.color;
 		this.acceleration = new Point(0, -0.1);
-		this.velocity = new Point(0, 0.005);
+		this.velocity = new Point(0, 0.05);
 		this.track = args.track;
 		this.moving = false;
 	}
