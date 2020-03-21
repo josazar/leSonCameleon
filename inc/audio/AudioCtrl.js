@@ -1,7 +1,7 @@
 class AudioCtrl {
 	constructor() {
 		this.FFT_Size = 16;
-		this.nbFFTLines = 5;
+		this.nbFFTLines = 7;
 		this.FFTLines = [];
 		// Audio
 		this.drum = new Tone.Player("/audio/drum_bass.wav").toMaster();
@@ -28,7 +28,7 @@ class AudioCtrl {
 		for (let i = 0; i < this.nbFFTLines; i++) {
 			let FFTL = new FFTLine(this.FFT_Size, 20 * i);
 			let path = FFTL.createPath();
-			path.opacity = 1 - i * 0.2;
+			path.opacity = 1 - i * 0.15;
 			this.FFTLines.push(FFTL);
 		}
 
@@ -58,6 +58,7 @@ class AudioCtrl {
 				colors.yellow
 			];
 			// time where a sample must start (nb of frames at 60fps)
+			//TODO: A changer car sur firefox les FPS sont 2 fois plus faible ! ca ne va pas.
 			let timeline = [10, 270, 1100, 1920, 3600];
 			for (let i = 0; i < nb_shapes; i++) {
 				let args = {

@@ -18,7 +18,9 @@ class Loader {
 				totalProgress += Tone.Buffer._downloadQueue[i].progress;
 			}
 			APP.scenes.toneBufferTxt.innerHTML =
-				(totalProgress / Tone.Buffer._downloadQueue.length) * 100 + "%";
+				" Audio : " +
+				(totalProgress / Tone.Buffer._downloadQueue.length) * 100 +
+				"%";
 		});
 	}
 	update() {

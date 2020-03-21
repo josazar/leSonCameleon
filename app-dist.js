@@ -111,7 +111,7 @@ class Loader {
         totalProgress += Tone.Buffer._downloadQueue[i].progress;
       }
 
-      APP.scenes.toneBufferTxt.innerHTML = totalProgress / Tone.Buffer._downloadQueue.length * 100 + "%";
+      APP.scenes.toneBufferTxt.innerHTML = " Audio : " + totalProgress / Tone.Buffer._downloadQueue.length * 100 + "%";
     });
   }
 
@@ -961,7 +961,7 @@ class FFTLine {
 class AudioCtrl {
   constructor() {
     this.FFT_Size = 16;
-    this.nbFFTLines = 5;
+    this.nbFFTLines = 7;
     this.FFTLines = []; // Audio
 
     this.drum = new Tone.Player("/audio/drum_bass.wav").toMaster();
@@ -981,7 +981,7 @@ class AudioCtrl {
     for (let i = 0; i < this.nbFFTLines; i++) {
       let FFTL = new FFTLine(this.FFT_Size, 20 * i);
       let path = FFTL.createPath();
-      path.opacity = 1 - i * 0.2;
+      path.opacity = 1 - i * 0.15;
       this.FFTLines.push(FFTL);
     }
 
@@ -1005,6 +1005,7 @@ class AudioCtrl {
 
     if (APP.audioShapes.length === 0) {
       let shapes_colors = [colors.green, colors.rose, colors.blue, colors.skin, colors.yellow]; // time where a sample must start (nb of frames at 60fps)
+      //TODO: A changer car sur firefox les FPS sont 2 fois plus faible ! ca ne va pas.
 
       let timeline = [10, 270, 1100, 1920, 3600];
 
@@ -1095,24 +1096,31 @@ class AudioShape {
     let rectangle = new Rectangle(new Point(0, 0), new Size(l, h));
     let cornerSize = new Size(10, 10);
     this.starter = args.starter || 0;
-    this.path = {};
-    let zis = this;
-    paper.project.importSVG(args.svg, function (item) {
-      zis.path = item; //console.log(item);
-
-      zis.path.fillColor = args.color;
-      let x = getRandomArbitrary(300, 600);
-      zis.path.position.x = x;
-      zis.path.position.y = -200;
+    this.path = new Path.Circle({
+      center: [0, 0],
+      radius: getRandomArbitrary(15, 30),
+      fillColor: args.color
     });
-    this.color = args.color;
+    let zis = this;
+    /*paper.project.importSVG(args.svg, function(item) {
+    	zis.path = item; //console.log(item);
+    	zis.path.fillColor = args.color;
+    	let x = getRandomArbitrary(300, 600);
+    	zis.path.position.x = x;
+    	zis.path.position.y = -200;
+    });*/
+
+    let x = getRandomArbitrary(300, 600);
+    this.path.position.x = x;
+    this.path.position.y = -200;
     this.acceleration = new Point(0, -0.1);
-    this.velocity = new Point(0, 0.05);
+    this.velocity = new Point(0, 0.01);
     this.track = args.track;
     this.moving = false;
   }
 
   init(pos) {
+    this.path.opacity = 1;
     this.path.position = pos;
     this.acceleration = new Point(0, -0.1);
   }
@@ -1244,6 +1252,7 @@ function onFrame(event) {
         // on modifie le style du calque ca va modifier le style de tous ses enfants
         APP.layers.bodyLayer.style.fillColor = audioShapes[i].fillColor; // Fx bodyScaleOut
 
+        audioShapes[i].opacity = 0;
         item = i;
       }
     }

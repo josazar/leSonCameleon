@@ -136,6 +136,7 @@ function onFrame(event) {
 				// une partie du corps alors touche une forme
 				// on modifie le style du calque ca va modifier le style de tous ses enfants
 				APP.layers.bodyLayer.style.fillColor = audioShapes[i].fillColor; // Fx bodyScaleOut
+				audioShapes[i].opacity = 0;
 				item = i;
 			}
 		}
