@@ -40,7 +40,7 @@ class ScenesManager {
 		// Body
 		APP.layers.bodyLayer.opacity = 1;
 		APP.layers.FFTLine.opacity = 1;
-		APP.layers.blops.opacity = 1;
+		//APP.layers.blops.opacity = 1;
 		APP.layers.audioShapes.opacity = 1;
 		APP.AudioCtrl.start();
 	}
@@ -48,7 +48,7 @@ class ScenesManager {
 		// Body
 		APP.layers.bodyLayer.opacity = 0;
 		APP.layers.FFTLine.opacity = 0;
-		APP.layers.blops.opacity = 0;
+		//APP.layers.blops.opacity = 0;
 		APP.layers.audioShapes.opacity = 0;
 		APP.AudioCtrl.stop();
 		deleteTruchetPattern();

@@ -8,6 +8,7 @@
 // @prepros-prepend  inc/TriggerZone.js
 // @prepros-prepend  inc/handMover.js
 // @prepros-prepend  inc/Truchet.js
+// @prepros-prepend  inc/audio/FFTLine.js
 // @prepros-prepend  inc/audio/AudioCtrl.js
 // @prepros-prepend  inc/audio/AudioShape.js
 
@@ -72,7 +73,7 @@ function setup() {
 
 	// >> NEW LAYER
 	// pour les objets Audios
-	APP.layers.blops = new Layer();
+	/*APP.layers.blops = new Layer();
 	APP.layers.blops.name = "blops";
 	APP.layers.blops.activate();
 	APP.layers.blops.opacity = 0;
@@ -91,7 +92,7 @@ function setup() {
 	});
 
 	APP.blobs.push(new Blop(circle2));
-	APP.blobs.push(new Blop(circle));
+	APP.blobs.push(new Blop(circle));*/
 
 	// >> NEW LAYER
 	// pour les objets Audios
@@ -134,7 +135,7 @@ function onFrame(event) {
 			if (APP.BODY.isTouchingShape(audioShapes[i])) {
 				// une partie du corps alors touche une forme
 				// on modifie le style du calque ca va modifier le style de tous ses enfants
-				APP.layers.bodyLayer.style = audioShapes[i].style; // Fx bodyScaleOut
+				APP.layers.bodyLayer.style.fillColor = audioShapes[i].fillColor; // Fx bodyScaleOut
 				item = i;
 			}
 		}
@@ -177,14 +178,6 @@ function onKeyDown(event) {
 
 	if (event.key === "z") {
 		deleteTruchetPattern();
-	}
-
-	if (event.key === "0") {
-		APP.scenes.launchHome();
-	}
-
-	if (event.key === "1") {
-		APP.AudioCtrl.stop();
 	}
 }
 

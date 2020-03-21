@@ -1,6 +1,8 @@
 class AudioCtrl {
 	constructor() {
 		this.FFT_Size = 16;
+		this.nbFFTLines = 10;
+		this.FFTLines = [];
 		// Audio
 		this.drum = new Tone.Player("/audio/drum_bass.wav").toMaster();
 		this.drum_02 = new Tone.Player("/audio/drum_bass_02.wav").toMaster();
@@ -20,17 +22,16 @@ class AudioCtrl {
 		this.timer = 0;
 		this.playing = false;
 	}
-
 	init() {
 		console.log("init AudioCtrl");
-		this.FFT_Path = new Path();
-		// Path
-		this.FFT_Path.segments = [];
-		for (var i = 0; i < this.FFT_Size; i++) {
-			var point = new Point((w / this.FFT_Size) * i, view.center.y);
-			this.FFT_Path.add(point);
+		// New FFT Lines
+		for (let i = 0; i < this.nbFFTLines; i++) {
+			let FFTL = new FFTLine(this.FFT_Size, 20 * i);
+			let path = FFTL.createPath();
+			path.opacity = 1 - i * 0.1;
+			this.FFTLines.push(FFTL);
 		}
-		this.FFT_Path.strokeColor = colors.yellow;
+
 		this.FFT = new Tone.FFT(this.FFT_Size);
 		// Chain to FFT analyzer
 		this.drum.chain(this.FFT);
@@ -62,11 +63,10 @@ class AudioCtrl {
 				let args = {
 					track: APP.AudioCtrl.tracks[i],
 					color: shapes_colors[i],
-					starter: timeline[i]
+					starter: timeline[i],
+					svg: "images/note_blue.svg"
 				};
 				let as = new AudioShape(args);
-				let x = getRandomArbitrary(200, 600);
-				as.init([x, -200]);
 				APP.audioShapes.push(as);
 			}
 		} else {
@@ -87,11 +87,11 @@ class AudioCtrl {
 			}
 			this.timer++;
 			let fftValue = this.FFT.getValue();
-			for (var i = 0; i < this.FFT_Size; i++) {
-				let posY = map(fftValue[i], 0, -120, 0, h);
-				this.FFT_Path.segments[i].point.y = posY;
+			// FFTLine update
+			for (let l = 0; l < this.FFTLines.length; l++) {
+				this.FFTLines[l].update(fftValue);
 			}
-			this.FFT_Path.smooth({ type: "continuous" });
+
 			// mouvement des Audio Shapes
 			for (let item of APP.audioShapes) {
 				item.update(APP.AudioCtrl.timer);

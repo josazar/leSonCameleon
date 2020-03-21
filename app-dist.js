@@ -171,8 +171,8 @@ class ScenesManager {
     this.show(this.inGameDiv); // Body
 
     APP.layers.bodyLayer.opacity = 1;
-    APP.layers.FFTLine.opacity = 1;
-    APP.layers.blops.opacity = 1;
+    APP.layers.FFTLine.opacity = 1; //APP.layers.blops.opacity = 1;
+
     APP.layers.audioShapes.opacity = 1;
     APP.AudioCtrl.start();
   }
@@ -180,8 +180,8 @@ class ScenesManager {
   stopGame() {
     // Body
     APP.layers.bodyLayer.opacity = 0;
-    APP.layers.FFTLine.opacity = 0;
-    APP.layers.blops.opacity = 0;
+    APP.layers.FFTLine.opacity = 0; //APP.layers.blops.opacity = 0;
+
     APP.layers.audioShapes.opacity = 0;
     APP.AudioCtrl.stop();
     deleteTruchetPattern();
@@ -922,9 +922,47 @@ function triangle(pt1_x, pt1_y, pt2_x, pt2_y, pt3_x, pt3_y, fillColor) {
   path.fillColor = fillColor; //return path;
 }
 
+class FFTLine {
+  constructor(size, distY = 0) {
+    this.size = size;
+    this.distY = distY;
+  }
+
+  createPath() {
+    this.FFT_Path = new Path();
+    this.FFT_Path.segments = [];
+
+    for (var i = 0; i < this.size; i++) {
+      var point = new Point(w / this.size * i, view.center.y);
+      this.FFT_Path.add(point);
+    }
+
+    this.FFT_Path.strokeColor = colors.yellow;
+    return this.FFT_Path;
+  }
+
+  getPath() {
+    return this.FFT_Path;
+  }
+
+  update(fftValue) {
+    for (var i = 0; i < this.size; i++) {
+      let posY = map(fftValue[i], 0, -120, 0, h + this.distY);
+      this.FFT_Path.segments[i].point.y = posY;
+    }
+
+    this.FFT_Path.smooth({
+      type: "continuous"
+    });
+  }
+
+}
+
 class AudioCtrl {
   constructor() {
-    this.FFT_Size = 16; // Audio
+    this.FFT_Size = 16;
+    this.nbFFTLines = 10;
+    this.FFTLines = []; // Audio
 
     this.drum = new Tone.Player("/audio/drum_bass.wav").toMaster();
     this.drum_02 = new Tone.Player("/audio/drum_bass_02.wav").toMaster();
@@ -938,17 +976,15 @@ class AudioCtrl {
   }
 
   init() {
-    console.log("init AudioCtrl");
-    this.FFT_Path = new Path(); // Path
+    console.log("init AudioCtrl"); // New FFT Lines
 
-    this.FFT_Path.segments = [];
-
-    for (var i = 0; i < this.FFT_Size; i++) {
-      var point = new Point(w / this.FFT_Size * i, view.center.y);
-      this.FFT_Path.add(point);
+    for (let i = 0; i < this.nbFFTLines; i++) {
+      let FFTL = new FFTLine(this.FFT_Size, 20 * i);
+      let path = FFTL.createPath();
+      path.opacity = 1 - i * 0.1;
+      this.FFTLines.push(FFTL);
     }
 
-    this.FFT_Path.strokeColor = colors.yellow;
     this.FFT = new Tone.FFT(this.FFT_Size); // Chain to FFT analyzer
 
     this.drum.chain(this.FFT);
@@ -976,11 +1012,10 @@ class AudioCtrl {
         let args = {
           track: APP.AudioCtrl.tracks[i],
           color: shapes_colors[i],
-          starter: timeline[i]
+          starter: timeline[i],
+          svg: "images/note_blue.svg"
         };
         let as = new AudioShape(args);
-        let x = getRandomArbitrary(200, 600);
-        as.init([x, -200]);
         APP.audioShapes.push(as);
       }
     } else {
@@ -1002,16 +1037,12 @@ class AudioCtrl {
       }
 
       this.timer++;
-      let fftValue = this.FFT.getValue();
+      let fftValue = this.FFT.getValue(); // FFTLine update
 
-      for (var i = 0; i < this.FFT_Size; i++) {
-        let posY = map(fftValue[i], 0, -120, 0, h);
-        this.FFT_Path.segments[i].point.y = posY;
-      }
+      for (let l = 0; l < this.FFTLines.length; l++) {
+        this.FFTLines[l].update(fftValue);
+      } // mouvement des Audio Shapes
 
-      this.FFT_Path.smooth({
-        type: "continuous"
-      }); // mouvement des Audio Shapes
 
       for (let item of APP.audioShapes) {
         item.update(APP.AudioCtrl.timer);
@@ -1058,31 +1089,32 @@ class AudioCtrl {
 }
 
 class AudioShape {
-  /**
-   *
-   * @param {*} args
-   *  track
-   *  path
-   *  color
-   */
   constructor(args) {
     let l = getRandomArbitrary(20, 120);
     let h = getRandomArbitrary(25, 85);
     let rectangle = new Rectangle(new Point(0, 0), new Size(l, h));
     let cornerSize = new Size(10, 10);
-    this.path = new Path.Rectangle(rectangle, cornerSize);
     this.starter = args.starter || 0;
-    this.path.fillColor = args.color;
-    this.track = args.track;
+    this.path = {};
+    let zis = this;
+    paper.project.importSVG(args.svg, function (item) {
+      zis.path = item; //console.log(item);
+
+      zis.path.fillColor = args.color;
+      let x = getRandomArbitrary(300, 600);
+      zis.path.position.x = x;
+      zis.path.position.y = -200;
+    });
+    this.color = args.color;
     this.acceleration = new Point(0, -0.1);
-    this.velocity = new Point(0, 0.05);
+    this.velocity = new Point(0, 0.005);
+    this.track = args.track;
     this.moving = false;
   }
 
   init(pos) {
     this.path.position = pos;
     this.acceleration = new Point(0, -0.1);
-    this.velocity = new Point(0, 0.05);
   }
 
   update(timer) {
@@ -1148,23 +1180,27 @@ function setup() {
   APP.AudioCtrl.init(); // >> NEW LAYER
   // pour les objets Audios
 
-  APP.layers.blops = new Layer();
+  /*APP.layers.blops = new Layer();
   APP.layers.blops.name = "blops";
   APP.layers.blops.activate();
   APP.layers.blops.opacity = 0;
+  
   let circle = new Path.Circle({
-    center: [250, 300],
-    radius: 45,
-    fillColor: colors.blue
+  	center: [250, 300],
+  	radius: 45,
+  	fillColor: colors.blue
   });
+  
   APP.blobs.push(new Blop(circle));
   let circle2 = new Path.Circle({
-    center: [450, 200],
-    radius: 50,
-    fillColor: colors.yellow
+  	center: [450, 200],
+  	radius: 50,
+  	fillColor: colors.yellow
   });
+  
   APP.blobs.push(new Blop(circle2));
-  APP.blobs.push(new Blop(circle)); // >> NEW LAYER
+  APP.blobs.push(new Blop(circle));*/
+  // >> NEW LAYER
   // pour les objets Audios
 
   APP.layers.audioShapes = new Layer();
@@ -1206,7 +1242,7 @@ function onFrame(event) {
       if (APP.BODY.isTouchingShape(audioShapes[i])) {
         // une partie du corps alors touche une forme
         // on modifie le style du calque ca va modifier le style de tous ses enfants
-        APP.layers.bodyLayer.style = audioShapes[i].style; // Fx bodyScaleOut
+        APP.layers.bodyLayer.style.fillColor = audioShapes[i].fillColor; // Fx bodyScaleOut
 
         item = i;
       }
@@ -1253,14 +1289,6 @@ function onKeyDown(event) {
 
   if (event.key === "z") {
     deleteTruchetPattern();
-  }
-
-  if (event.key === "0") {
-    APP.scenes.launchHome();
-  }
-
-  if (event.key === "1") {
-    APP.AudioCtrl.stop();
   }
 }
 /********************************************************************
